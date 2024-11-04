@@ -1,6 +1,9 @@
 # Main menu
 seleccionMenu = 0
 
+def LAPUTAMRD():
+    print("AAAAA ME QUIERO AAAA")
+
 def mostrarDataDeEstudiantes():
     print("\n====== Listado de estudiantes registrados ======")
     
