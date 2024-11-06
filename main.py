@@ -1,11 +1,19 @@
 # Main menu
 seleccionMenu = 0
 
-def LAPUTAMRD():
-    print("AAAAA ME QUIERO AAAA")
+#from gestion import Calificaciones
+#from gestion import datos_estudiante
+#from gestion import datos_universidad
+#from gestion import gestion_cursos
+from gestion import gestion_estudiante
+#from gestion import gestion_universidad
+#from gestion import add_new_course
+
+
 
 def mostrarDataDeEstudiantes():
     print("\n====== Listado de estudiantes registrados ======")
+    gestion_estudiante.list_students()
     
 def mostrarDataDeCursos():
     pass   
@@ -64,15 +72,35 @@ def gestionDeEstudiante():
                 print("3. Eliminar estudiante existente")
                 optB = int(input("\nSeleccione una opcion: "))
                 if optB == 1:
-                    pass
+                    nro_id = input("Ingrese el número de matricula del estudiante: ")
+                    rut = input("Ingrese el RUT del estudiante: ")
+                    nombre_completo = input(
+                        "Ingrese el nombre completo del estudiante: "
+                    )
+
+                    try:
+                        new_student = gestion_estudiante.create_student(
+                            nro_id, rut, nombre_completo
+                        )
+                        print(
+                            f" Estudiante {new_student.identificacion_fija[1]} registrado con exito"
+                        )
+                    except Exception as e:
+                        print(e)
                 elif optB == 2:
                     pass
                 elif optB == 3:
-                    pass
+                    mostrarDataDeEstudiantes()
+                    nro_id = str(
+                        input(
+                            "Ingrese el número de matricula del estudiante a eliminar: "
+                        )
+                    )
+                    gestion_estudiante.delete_student(nro_id)
                 else:
-                    print("Opcion invalida")
+                    print("Opcion Invalida")
             except ValueError:
-                print("Opcion invalida")
+                print("Opcion Invalida")
         elif opt == 2:
             mostrarDataDeEstudiantes()
         elif opt == 3:
