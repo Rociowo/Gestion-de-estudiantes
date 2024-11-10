@@ -1,12 +1,11 @@
-# Student Data Model and Functions
-
 from typing import Dict, Optional
+import os
+import ast
 
 
 class Student:
     def __init__(self, nro_id: str, rut: str, nombre_completo: str):
-        self.identificacion_fija = (nro_id, nombre_completo)
-        self.rut = rut
+        self.identificacion_fija = (nro_id, rut, nombre_completo)
         self.cursos = []
         self.notas = {}
 
@@ -46,50 +45,114 @@ class Student:
 students_db: Dict[str, Student] = {}
 
 
+def save_fixed_data(nro_id: str, rut: str, nombre_completo: str, delete: bool = False):
+    filepath = "Management/datos_estudiantes.py"
+
+    if os.path.exists(filepath):
+        with open(filepath, "r") as f:
+            lines = f.readlines()
+
+        if len(lines) > 1:
+            fixed_data = []
+            for line in lines[1:-1]:
+                cleaned_line = line.strip().strip("',")
+                student = ast.literal_eval(cleaned_line)
+                fixed_data.append(student)
+
+            if delete:
+                fixed_data = [student for student in fixed_data if student[0] != nro_id]
+            else:
+                fixed_data.append((nro_id, rut, nombre_completo))
+        else:
+            fixed_data = [(nro_id, rut, nombre_completo)]
+
+    else:
+        fixed_data = [(nro_id, rut, nombre_completo)]
+
+    with open(filepath, "w") as f:
+        f.write("datos_fijos_estudiantes = [\n")
+        for student in fixed_data:
+            f.write(f"    ('{student[0]}', '{student[1]}', '{student[2]}'),\n")
+        f.write("]\n")
+
+
+def get_fixed_data():
+    filepath = "Management/datos_estudiantes.py"
+    if not os.path.exists(filepath):
+        return []
+    with open(filepath, "r") as f:
+        lines = f.readlines()
+        if (len(lines)) > 1:
+            return [tuple(line.strip()[2:-2].split("', '")) for line in lines[1:-1]]
+        else:
+            return []
+
+
 def create_student(nro_id: str, rut: str, nombre_completo: str) -> Student:
     if nro_id in students_db:
         raise ValueError("El estudiante con este número de ID ya existe.")
     for student in students_db.values():
-        if student.rut == rut:
+        if student.identificacion_fija[1] == rut:
             raise ValueError("El estudiante con este número de rut ya existe.")
-    for student in students_db.values():
-        if student.identificacion_fija[1] == student.identificacion_fija[1]:
-            raise ValueError("El estudiante con este nombre ya existe.")
+
+    fixed_data = get_fixed_data()
+    if any(student[0] == nro_id for student in fixed_data):
+        raise ValueError("El estudiante con este número de ID ya existe.")
+    if any(student[1] == rut for student in fixed_data):
+        raise ValueError("El estudiante con este número de rut ya existe.")
     student = Student(nro_id, rut, nombre_completo)
     students_db[nro_id] = student
+    save_fixed_data(nro_id, rut, nombre_completo)
     return student
 
 
 def read_student(nro_id: str) -> Optional[Student]:
-    return students_db.get(nro_id)
+    student = students_db.get(nro_id)
+    if student:
+        return student
+    return None
 
 
-def update_student(nro_id: str, nombre_completo: Optional[str] = None) -> bool:
+def update_student(nro_id: str, nuevo_nombre_completo: Optional[str] = None) -> bool:
     student = students_db.get(nro_id)
     if not student:
+        print("Estudiante no encontrado")
         return False
-    if nombre_completo:
-        student.identificacion_fija = (student.identificacion_fija[0], nombre_completo)
-    return True
+
+    rut = student.identificacion_fija[1]
+    nombre_completo = student.identificacion_fija[2]
+
+    if nuevo_nombre_completo:
+        nombre_completo = nuevo_nombre_completo
+
+    delete_student(nro_id)
+    create_student(nro_id, rut, nombre_completo)
+    print("Estudiante actualizado con éxito")
 
 
 def delete_student(nro_id: str) -> bool:
     student = students_db.pop(nro_id, None)
     if student:
+        save_fixed_data(
+            nro_id,
+            student.identificacion_fija[1],
+            student.identificacion_fija[2],
+            delete=True,
+        )
         return True
     return False
 
 
 def list_students() -> Dict[str, Dict]:
     if not students_db:
-        print("No hay estudiantes reegistrados")
+        print("No hay estudiantes registrados")
         return
 
     sorted_students = sorted(students_db.items(), key=lambda x: x[0])
     for nro_id, student in sorted_students:
         print(f"ID: {nro_id}")
-        print(f"Nombre Completo: {student.identificacion_fija[1]}")
-        print(f"Rut: {student.rut}")
+        print(f"Nombre Completo: {student.identificacion_fija[2]}")
+        print(f"Rut: {student.identificacion_fija[1]}")
         print(
             f"Cursos: {','.join(student.cursos) if student.cursos else 'Estudiante sin cursos inscritos'}"
         )
