@@ -1,3 +1,5 @@
+# Student Data Model and Functions
+
 from typing import Dict, Optional
 import os
 import ast
@@ -13,6 +15,11 @@ class Student:
         if curso not in self.cursos:
             self.cursos.append(curso)
             self.notas[curso] = []
+
+    def remove_course(self, curso):
+        if curso in self.cursos:
+            self.cursos.remove(curso)
+            del self.notas[curso]
 
     def add_grade(self, curso: str, nota: float):
         if curso in self.cursos:
