@@ -53,7 +53,7 @@ students_db: Dict[str, Student] = {}
 
 
 def save_fixed_data(nro_id: str, rut: str, nombre_completo: str, delete: bool = False):
-    filepath = "Management/datos_estudiantes.py"
+    filepath = "gestion/datos_estudiantes.py"
 
     if os.path.exists(filepath):
         with open(filepath, "r") as f:
@@ -84,7 +84,7 @@ def save_fixed_data(nro_id: str, rut: str, nombre_completo: str, delete: bool = 
 
 
 def get_fixed_data():
-    filepath = "Management/datos_estudiantes.py"
+    filepath = "gestion/datos_estudiantes.py"
     if not os.path.exists(filepath):
         return []
     with open(filepath, "r") as f:
