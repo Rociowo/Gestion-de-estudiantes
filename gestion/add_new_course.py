@@ -7,7 +7,7 @@ courses_db = []
 class courseManager:
     @staticmethod
     def add_course(codigo: str, nombre: str, descripcion: str = "") -> Course:
-        if any(course[0] == codigo for course in courses_db):
+        if any(course.codigo == codigo for course in courses_db):
             raise ValueError("Ya existe un curso con este código.")
 
         course = Course(codigo, nombre, descripcion)

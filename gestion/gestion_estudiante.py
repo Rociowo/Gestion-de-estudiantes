@@ -30,6 +30,15 @@ class Student:
         else:
             raise ValueError(f"El curso: '{curso}' no está registrado")
 
+    def get_grades(self, codigo_curso):
+        if codigo_curso in self.notas:
+            return self.notas.get(codigo_curso)
+        return []
+
+    def update_grades(self, codigo_curso, nuevas_calificaciones):
+        if codigo_curso in self.notas:
+            self.notas[codigo_curso] = nuevas_calificaciones
+
     def calculate_average(self) -> Dict[str, float]:
         promedios = {}
         for curso, notas in self.notas.items():
@@ -48,86 +57,12 @@ class Student:
             "notas": self.notas,
         }
 
-def ShowStudentData():
-    print("\n====== Listado de Estudiantes Registrados ======")
-    list_students()
 
 students_db: Dict[str, Student] = {}
 
-def StudentManager():
-    print("\n====== Gestion de Estudiantes ======")
-    print("1. Administrar datos de estudiantes")
-    print("2. Listado de estudiantes registrados")
-    print("3. Volver al menu principal")
-    try:
-        opt2 = int(input("\nSeleccione una opción: "))
-        if opt2 == 1:
-            try:
-                print("\n====== Administrar datos de estudiantes registrados ======")
-                print("1. Registrar nuevo estudiante")
-                print("2. Actualizar estudiante existente")
-                print("3. Eliminar estudiante existente")
-                print("4. Volver al menu principal")
-                optB2 = int(input("\nSeleccione una opción: "))
-                if optB2 == 1:
-                    nro_id = input("Ingrese el número de matricula del estudiante: ")
-                    rut = input("Ingrese el RUT del estudiante: ")
-                    nombre_completo = input(
-                        "Ingrese el nombre completo del estudiante: "
-                    )
-
-                    try:
-                        new_student = create_student(
-                            nro_id, rut, nombre_completo
-                        )
-                        print(
-                            f" Estudiante {new_student.identificacion_fija[2]} registrado con exito"
-                        )
-                    except Exception as e:
-                        print(e)
-                elif optB2 == 2:
-                    ShowStudentData()
-                    nro_id = str(
-                        input(
-                            "Ingrese el número de matricula del estudiante a actualizar: "
-                        )
-                    )
-                    retrieved_student = read_student(nro_id)
-                    if retrieved_student is None:
-                        print("Estudiante no encontrado")
-                    else:
-                        nuevo_nombre_completo = str(
-                            input("Ingrese el nombre del estudiante: ")
-                        )
-                        update_student(nro_id, nuevo_nombre_completo)
-
-                elif optB2 == 3:
-                    ShowStudentData()
-                    nro_id = str(
-                        input(
-                            "Ingrese el número de matricula del estudiante a eliminar: "
-                        )
-                    )
-                    delete_student(nro_id)
-                    print("Estuidante Eliminado")
-                elif optB2 == 4:
-                    pass
-                else:
-                    print("Opcion Invalida")
-            except ValueError:
-                print("Opcion Invalida")
-        elif opt2 == 2:
-            ShowStudentData()
-        elif opt2 == 3:
-            pass
-        else:
-            print("Opcion Invalida")
-    except ValueError:
-        print("Opcion Invalida")
-
 
 def save_fixed_data(nro_id: str, rut: str, nombre_completo: str, delete: bool = False):
-    filepath = "gestion/datos_estudiantes.py"
+    filepath = "Management/datos_estudiantes.py"
 
     if os.path.exists(filepath):
         with open(filepath, "r") as f:
@@ -158,7 +93,7 @@ def save_fixed_data(nro_id: str, rut: str, nombre_completo: str, delete: bool = 
 
 
 def get_fixed_data():
-    filepath = "gestion/datos_estudiantes.py"
+    filepath = "Management/datos_estudiantes.py"
     if not os.path.exists(filepath):
         return []
     with open(filepath, "r") as f:
@@ -239,3 +174,23 @@ def list_students() -> Dict[str, Dict]:
         )
         print(f"Promedio: {student.calculate_average()}")
         print("=" * 30)
+
+
+def save_grades():
+    filepath = "Management/calificaciones.py"
+
+    grades_data = []
+    for nro_id, student in students_db.items():
+        student_grades = {
+            "nro_id": nro_id,
+            "nombre_completo": student.identificacion_fija[2],
+            "notas": student.notas,
+        }
+        grades_data.append(student_grades)
+
+    with open(filepath, "w") as f:
+        f.write("calificaciones = [\n")
+        for data in grades_data:
+            f.write(f"    {data},\n")
+        f.write("]\n")
+    print(f"Calificaciones guardadas exitosamente en {filepath}")
