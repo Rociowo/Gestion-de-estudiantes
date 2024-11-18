@@ -1,5 +1,9 @@
 from gestion import gestion_estudiante
 from gestion.gestion_cursos import Course
+import json
+import uuid
+import os
+import datetime
 
 courses_db = []
 
@@ -35,11 +39,56 @@ class courseManager:
             return True
         return False
 
-    @staticmethod
     def delete_course(codigo: str) -> bool:
         global courses_db
-        courses_db = [course for course in courses_db if course[0] != codigo]
-        return True
+        try:
+            curso = next(
+                (course for course in courses_db if course.codigo == codigo), None
+            )
+            if curso:
+                if curso.estudiantes:
+                    print(
+                        f"No se puede eliminar el curso {codigo} porque tiene estudiantes inscritos."
+                    )
+                    return False
+
+                courses_db = [
+                    course for course in courses_db if course.codigo != codigo
+                ]
+
+                delete_id = str(uuid.uuid4())
+                delete_entry = {
+                    "id": delete_id,
+                    "codigo": codigo,
+                    "accion": "eliminacion",
+                    "detalle": f"Curso {codigo} eliminado",
+                    "fecha": str(datetime.datetime.now()),
+                }
+
+                dir_path = "gestion/db_sys/"
+                if not os.path.exists(dir_path):
+                    os.makedirs(dir_path)
+
+                file_path = os.path.join(dir_path, "registro_eliminaciones.json")
+                if os.path.exists(file_path):
+                    with open(file_path, "r") as f:
+                        registros = json.load(f)
+                else:
+                    registros = []
+
+                registros.append(delete_entry)
+
+                with open(file_path, "w") as f:
+                    json.dump(registros, f, indent=4)
+
+                print(f"Curso {codigo} eliminado correctamente.")
+                return True
+            else:
+                print(f"Curso con código {codigo} no encontrado.")
+                return False
+        except Exception as e:
+            print(f"Error al eliminar el curso: {e}")
+            return False
 
     @staticmethod
     def list_courses() -> Course:
