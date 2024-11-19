@@ -1,0 +1,35 @@
+[
+    {
+        "id": "2e159463-f180-47c3-bda1-27cb8caea749",
+        "accion": "vaciar_archivos",
+        "detalle": "Contenido de los archivos datos_estudiantes.py, datos_universidad.py y calificaciones.py eliminado.",
+        "archivos_afectados": [
+            "gestion/datos_estudiantes.py",
+            "gestion/datos_universidad.py",
+            "gestion/calificaciones.py"
+        ],
+        "fecha": "2024-11-19 01:20:14.940828"
+    },
+    {
+        "id": "a0478eb8-2262-489d-b43c-db7a178e4828",
+        "accion": "vaciar_archivos",
+        "detalle": "Contenido de los archivos datos_estudiantes.py, datos_universidad.py y calificaciones.py eliminado.",
+        "archivos_afectados": [
+            "gestion/datos_estudiantes.py",
+            "gestion/datos_universidad.py",
+            "gestion/calificaciones.py"
+        ],
+        "fecha": "2024-11-19 01:24:52.874274"
+    },
+    {
+        "id": "bdeaa222-4f6c-4c1c-9dca-f9b98f0473f9",
+        "accion": "vaciar_archivos",
+        "detalle": "Contenido de los archivos datos_estudiantes.py, datos_universidad.py y calificaciones.py eliminado.",
+        "archivos_afectados": [
+            "gestion/datos_estudiantes.py",
+            "gestion/datos_universidad.py",
+            "gestion/calificaciones.py"
+        ],
+        "fecha": "2024-11-19 01:28:34.178131"
+    }
+]

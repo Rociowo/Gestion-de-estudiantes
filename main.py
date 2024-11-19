@@ -1,14 +1,33 @@
 # Main menu
 
+import os
+import json
+from gestion.add_new_course import courses_db
+from datetime import datetime
+from gestion.gestion_cursos import Course
+from gestion.gestion_estudiante import Student, students_db
 from gestion import add_new_course
 from gestion import gestion_estudiante
 from gestion import gestion_universidad
 from gestion.gestion_universidad import SedeManager
 from gestion.gestion_universidad import SedeUniversitaria
-import os
-import json
 import uuid
-import datetime
+
+try:
+    from gestion.calificaciones import calificaciones
+except ImportError:
+    calificaciones = []
+
+try:
+    from gestion.datos_estudiantes import datos_fijos_estudiantes
+except ImportError:
+    datos_fijos_estudiantes = []
+
+try:
+    from gestion.datos_universidad import sedes_registradas
+except ImportError:
+    sedes_registradas = []
+
 
 menuVar = 0
 
@@ -38,7 +57,7 @@ def verificar_estudiante_existente(nro_id):
 
 def ClassroomManager():
     while True:
-        os.system("cls" if os.name == "nt" else "clear")
+        
         print("\n" + "=" * 40)
         print(f"{' Sistema de Gestión de Cursos ':^40}")
         print("=" * 40)
@@ -52,7 +71,7 @@ def ClassroomManager():
             opt1 = int(input("\nSeleccione una opción: "))
             if opt1 == 1:
                 while True:
-                    os.system("cls" if os.name == "nt" else "clear")
+                    
                     print("\n" + "=" * 40)
                     print(f"{' Gestion de datos de cursos ':^40}")
                     print("=" * 40)
@@ -66,7 +85,7 @@ def ClassroomManager():
                     try:
                         optB1 = int(input("\nSeleccione una opción: "))
                         if optB1 == 1:
-                            os.system("cls" if os.name == "nt" else "clear")
+                            
                             print("\n" + "=" * 40)
                             print(f"{' Registrar Nuevo Curso ':^40}")
                             print("=" * 40)
@@ -82,7 +101,7 @@ def ClassroomManager():
                             except ValueError as e:
                                 print(f"Error: {e}")
                         elif optB1 == 2:
-                            os.system("cls" if os.name == "nt" else "clear")
+                            
                             print("\n" + "=" * 40)
                             print(f"{' Administrar Cursos ':^40}")
                             print("=" * 40)
@@ -110,7 +129,7 @@ def ClassroomManager():
                                 try:
                                     optCurso = int(input("\nSeleccione una opción: "))
                                     if optCurso == 1:
-                                        os.system("cls" if os.name == "nt" else "clear")
+                                        
                                         print("\n" + "=" * 40)
                                         print(f"{' Actualizar Curso ':^40}")
                                         print("=" * 40)
@@ -138,7 +157,7 @@ def ClassroomManager():
                                                     "No se encontró un curso con ese código."
                                                 )
                                     elif optCurso == 2:
-                                        os.system("cls" if os.name == "nt" else "clear")
+                                        
                                         print("\n" + "=" * 40)
                                         print(f"{' Asignar Estudiante ':^40}")
                                         print("=" * 40)
@@ -156,7 +175,7 @@ def ClassroomManager():
                                         else:
                                             print("Estudiante no encontrado")
                                     elif optCurso == 3:
-                                        os.system("cls" if os.name == "nt" else "clear")
+                                        
                                         print("\n" + "=" * 40)
                                         print(f"{' Desvincular Estudiante ':^40}")
                                         print("=" * 40)
@@ -176,7 +195,7 @@ def ClassroomManager():
                                                 "Estudiante no encontrado o no asignado a este curso"
                                             )
                                     elif optCurso == 4:
-                                        os.system("cls" if os.name == "nt" else "clear")
+                                        
                                         print("\n" + "=" * 40)
                                         print(f"{' Agregar Notas ':^40}")
                                         print("=" * 40)
@@ -212,7 +231,7 @@ def ClassroomManager():
                                                     "Ocurrió un error al registrar la nota"
                                                 )
                                     elif optCurso == 5:
-                                        os.system("cls" if os.name == "nt" else "clear")
+                                        
                                         print("\n" + "=" * 40)
                                         print(f"{' Eliminar Notas ':^40}")
                                         print("=" * 40)
@@ -284,7 +303,7 @@ def ClassroomManager():
                                     print("Error al procesar la solicitud")
 
                         elif optB1 == 3:
-                            os.system("cls" if os.name == "nt" else "clear")
+                            
                             print("\n" + "=" * 40)
                             print(f"{' Eliminar Curso ':^40}")
                             print("=" * 40)
@@ -308,7 +327,7 @@ def ClassroomManager():
                         print("Error: Entrada no válida")
 
             elif opt1 == 2:
-                os.system("cls" if os.name == "nt" else "clear")
+                
                 print("\n" + "=" * 40)
                 print(f"{' Listado de Cursos ':^40}")
                 print("=" * 40)
@@ -323,7 +342,7 @@ def ClassroomManager():
 
 
 def StudentManager():
-    os.system("cls" if os.name == "nt" else "clear")
+    
     while True:
         print("\n====== Gestion de Estudiantes ======")
         print("1. Administrar datos de estudiantes")
@@ -333,7 +352,7 @@ def StudentManager():
             opt2 = int(input("\nSeleccione una opción: "))
             if opt2 == 1:
                 while True:
-                    os.system("cls" if os.name == "nt" else "clear")
+                    
                     print(
                         "\n====== Administrar datos de estudiantes registrados ======"
                     )
@@ -394,7 +413,7 @@ def StudentManager():
                     except ValueError:
                         print("Opcion Invalida")
             elif opt2 == 2:
-                os.system("cls" if os.name == "nt" else "clear")
+                
                 ShowStudentData()
             elif opt2 == 3:
                 break
@@ -405,7 +424,7 @@ def StudentManager():
 
 
 def UniversityManager():
-    os.system("cls" if os.name == "nt" else "clear")
+    
     while True:
         print("\n====== Gestion de Sedes Universitarias ======")
         print("1. Administrar datos de sedes registradas")
@@ -415,7 +434,7 @@ def UniversityManager():
             opt3 = int(input("\nSeleccione una opción: "))
             if opt3 == 1:
                 while True:
-                    os.system("cls" if os.name == "nt" else "clear")
+                    
                     print("\n====== Administrar datos de sedes registradas ======")
                     print("1. Registrar nueva sede")
                     print("2. Actualizar sede existente")
@@ -519,7 +538,7 @@ def UniversityManager():
                         print("Opción inválida.")
 
             elif opt3 == 2:
-                os.system("cls" if os.name == "nt" else "clear")
+                
                 ShowUniversityData()
             elif opt3 == 3:
                 print("Volviendo al menú principal...")
@@ -573,7 +592,7 @@ def vaciar_archivos():
             "accion": "vaciar_archivos",
             "detalle": "Contenido de los archivos datos_estudiantes.py, datos_universidad.py y calificaciones.py eliminado.",
             "archivos_afectados": archivos,
-            "fecha": str(datetime.datetime.now()),
+            "fecha": str(datetime.now()),
         }
 
         dir_path = "gestion/db_sys/"
@@ -591,7 +610,7 @@ def vaciar_archivos():
 
         try:
             if os.path.exists(file_path):
-                with open(file_path, "r") as f:
+                with open(file_path, "r", encoding="utf-8") as f:
                     try:
                         registros = json.load(f)
                     except json.JSONDecodeError as e:
@@ -606,8 +625,8 @@ def vaciar_archivos():
         registros.append(delete_entry)
 
         try:
-            with open(file_path, "w") as f:
-                json.dump(registros, f, indent=4)
+            with open(file_path, "w", encoding="utf-8") as f:
+                json.dump(registros, f, ensure_ascii=False, indent=4)
         except OSError as e:
             print(f"Error al escribir en el archivo {file_path}: {e}")
         except Exception as e:
@@ -617,8 +636,198 @@ def vaciar_archivos():
         print(f"Error inesperado general al vaciar los archivos: {e}")
 
 
+def agregar_timestamps(datos):
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    return {"timestamp": timestamp, "data": datos}
+
+
+def guardar_datos_json():
+    try:
+        ruta_json = "gestion/db_sys/datos_registrados.json"
+        os.makedirs(os.path.dirname(ruta_json), exist_ok=True)
+
+        calificaciones = cargar_archivo_python(
+            "gestion/calificaciones.py", "calificaciones"
+        )
+        datos_fijos_estudiantes = cargar_archivo_python(
+            "gestion/datos_estudiantes.py", "datos_fijos_estudiantes"
+        )
+        sedes_registradas = cargar_archivo_python(
+            "gestion/datos_universidad.py", "sedes_registradas"
+        )
+
+        students_db_data = {
+            key: {key_attr: value for key_attr, value in vars(student).items()}
+            if isinstance(student, Student)
+            else student
+            for key, student in students_db.items()
+        }
+
+        courses_db_data = [
+            {key: value for key, value in vars(course).items()}
+            if isinstance(course, Course)
+            else course
+            for course in courses_db
+        ]
+
+        datos = {
+            "courses_db": courses_db_data,
+            "calificaciones_db": calificaciones,
+            "estudiantes_db": datos_fijos_estudiantes,
+            "universidades_db": sedes_registradas,
+            "students_db": students_db_data,
+        }
+
+        with open(ruta_json, "w", encoding="utf-8") as archivo:
+            json.dump(datos, archivo, ensure_ascii=False, indent=4)
+
+        print(f"Datos guardados exitosamente en '{ruta_json}'.")
+
+    except FileNotFoundError as e:
+        print(f"Error al guardar los datos: archivo no encontrado - {e}")
+    except PermissionError as e:
+        print(f"Error de permisos al intentar guardar los datos en {ruta_json}: {e}")
+    except json.JSONDecodeError as e:
+        print(f"Error en el formato JSON al guardar los datos: {e}")
+    except OSError as e:
+        print(f"Error del sistema operativo al intentar acceder al archivo: {e}")
+    except IOError as e:
+        print(f"Error de entrada/salida al guardar el archivo: {e}")
+    except Exception as e:
+        print(f"Error inesperado al guardar los datos en JSON: {e}")
+
+
+def cargar_archivo_python(filepath, var_name):
+    try:
+        if not os.path.exists(filepath) or os.stat(filepath).st_size == 0:
+            print(
+                f"El archivo {filepath} no existe o está vacío. Se creará una variable vacía."
+            )
+            return []
+        with open(filepath, "r", encoding="utf-8") as archivo:
+            contenido = archivo.read()
+        local_vars = {}
+        exec(contenido, {}, local_vars)
+        return local_vars.get(var_name, [])
+    except Exception as e:
+        print(f"Error al cargar el archivo {filepath}: {e}")
+        return []
+
+
+def guardar_archivo_python(filepath, var_name, data):
+    try:
+        os.makedirs(os.path.dirname(filepath), exist_ok=True)
+        with open(filepath, "w", encoding="utf-8") as archivo:
+            archivo.write(f"{var_name} = {repr(data)}")
+        print(f"Archivo '{filepath}' guardado exitosamente.")
+    except Exception as e:
+        print(f"Error al guardar el archivo {filepath}: {e}")
+
+
+def cargar_datos_json():
+    try:
+        ruta_json = "gestion/db_sys/datos_registrados.json"
+        if not os.path.exists(ruta_json):
+            print(f"El archivo '{ruta_json}' no existe. No se cargaron datos.")
+            return
+
+        with open(ruta_json, "r", encoding="utf-8") as archivo:
+            datos = json.load(archivo)
+
+        global \
+            calificaciones, \
+            datos_fijos_estudiantes, \
+            sedes_registradas, \
+            students_db, \
+            courses_db
+
+        calificaciones = datos.get("calificaciones_db", [])
+        datos_fijos_estudiantes = [
+            (item[0], item[1], item[2]) for item in datos.get("estudiantes_db", [])
+        ]
+        sedes_registradas = datos.get("universidades_db", [])
+        courses_db = datos.get("courses_db", [])
+
+        if "students_db" in datos and isinstance(datos["students_db"], dict):
+            students_db = {}
+            for key, value in datos["students_db"].items():
+                identificacion_fija = value.get("identificacion_fija", [])
+                if len(identificacion_fija) >= 3:
+                    nro_id, rut, nombre_completo = identificacion_fija[:3]
+                else:
+                    nro_id = rut = nombre_completo = None
+                student_data = {
+                    k: v
+                    for k, v in value.items()
+                    if k not in ["identificacion_fija", "notas", "cursos"]
+                }
+                if nro_id and rut and nombre_completo:
+                    students_db[key] = Student(
+                        nro_id=nro_id,
+                        rut=rut,
+                        nombre_completo=nombre_completo,
+                        **student_data,
+                    )
+                else:
+                    print(
+                        f"Faltan datos necesarios para crear el estudiante con ID {key}"
+                    )
+        else:
+            students_db = {}
+
+        if "courses_db" in datos:
+            courses_db = datos["courses_db"]
+
+        guardar_archivo_python(
+            "gestion/calificaciones.py", "calificaciones", calificaciones
+        )
+        guardar_archivo_python(
+            "gestion/datos_estudiantes.py",
+            "datos_fijos_estudiantes",
+            datos_fijos_estudiantes,
+        )
+        guardar_archivo_python(
+            "gestion/datos_universidad.py", "sedes_registradas", sedes_registradas
+        )
+
+        print("Datos cargados exitosamente desde JSON y archivos .py actualizados.")
+
+    except json.JSONDecodeError as e:
+        print(f"Error en el formato del archivo JSON '{ruta_json}': {e}")
+    except FileNotFoundError as e:
+        print(f"Archivo no encontrado: {e}")
+    except KeyError as e:
+        print(f"Clave no encontrada en el JSON: {e}")
+    except Exception as e:
+        print(f"Error al cargar los datos desde JSON: {e}")
+
+
+if __name__ == "__main__":
+    while True:
+        print("\n" + "=" * 40)
+        print(" Sistema de Gestión - Manejo de Datos ")
+        print("=" * 40)
+        print("1. Respaldar datos en JSON")
+        print("2. Cargar datos desde JSON")
+        print("3. Ingresar al sistema")
+        try:
+            opcion = int(input("\nSeleccione una opción: "))
+            if opcion == 1:
+                guardar_datos_json()
+            elif opcion == 2:
+                cargar_datos_json()
+            elif opcion == 3:
+                print("Saliendo del sistema...")
+                break
+            else:
+                print("Opción inválida.")
+        except ValueError:
+            print("Debe ingresar un número válido.")
+
+
 def Menu():
-    os.system("cls" if os.name == "nt" else "clear")
+    
+    cargar_datos_json()
     while True:
         print("\n" + "=" * 40)
         print(" Sistema de Gestión de Estudiantes ")
@@ -652,6 +861,7 @@ def Menu():
                 print(f"✘ Error en la gestión de universidades: {e}")
         elif menuSelection == 4:
             print("\n💻 Cerrando el sistema...")
+            guardar_datos_json()
             vaciar_archivos()
             break
 
